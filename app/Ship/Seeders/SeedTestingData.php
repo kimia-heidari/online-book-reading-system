@@ -3,6 +3,7 @@
 namespace App\Ship\Seeders;
 
 use App\Ship\Parents\Seeders\Seeder;
+use App\Containers\AppSection\Book\Data\Seeders\BookSeeder;
 
 class SeedTestingData extends Seeder
 {
@@ -13,6 +14,6 @@ class SeedTestingData extends Seeder
      */
     public function run(): void
     {
-        // Create Testing data for live tests
+        app(BookSeeder::class)->run();
     }
 }
