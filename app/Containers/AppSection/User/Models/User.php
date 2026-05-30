@@ -72,4 +72,9 @@ class User extends ParentUserModel implements MustVerifyEmail
             get: static fn (string|null $value): string|null => null === $value ? null : strtolower($value),
         );
     }
+
+    public function bookHistories(): HasMany
+    {
+        return $this->hasMany(UserBookHistory::class);
+    }
 }

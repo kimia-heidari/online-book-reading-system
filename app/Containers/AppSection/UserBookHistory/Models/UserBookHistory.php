@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Containers\AppSection\Book\Models;
+namespace App\Containers\AppSection\UserBookHistory\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Containers\AppSection\Book\Data\Factories\BookFactory;
 
-class Book extends Model
+class UserBookHistory extends Model
 {
     use HasFactory;
 
@@ -16,25 +16,26 @@ class Book extends Model
     }
 
     protected $fillable = [
-        'title',
-        'author',
-        'slug',
-        'description',
-        'total_pages',
+        'user_id',
+        'book_id',
+        'last_page',
         'is_active',
+        'font_size',
+        'last_read_at', 
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'last_read_at' => 'datetime',
     ];
 
-    public function pages(): HasMany
+    public function user(): BelongsTo
     {
-        return $this->hasMany(BookPage::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function userHistories(): HasMany
+    public function book(): BelongsTo
     {
-        return $this->hasMany(UserBookHistory::class);
+        return $this->belongsTo(Book::class);
     }
 }
