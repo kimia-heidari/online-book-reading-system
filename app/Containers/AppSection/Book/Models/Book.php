@@ -21,4 +21,9 @@ class Book extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    public function pages(): HasMany
+    {
+        return $this->hasMany(BookPage::class);
+    }
 }
