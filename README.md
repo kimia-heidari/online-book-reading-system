@@ -54,6 +54,8 @@ Custom containers for the reading system live under `app/Containers/AppSection/`
 
 ## Database Schema
 
+![API Flow](docs/images/db.png)
+
 | Table | Description |
 |-------|-------------|
 | `books` | Title, author, slug, description, `total_pages`, `is_active` |
