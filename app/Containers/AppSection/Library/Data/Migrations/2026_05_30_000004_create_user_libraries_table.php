@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('user_libraries', function (Blueprint $table) {
+        Schema::create('user_book_libraries', function (Blueprint $table) {
             $table->id();
 
             $table->foreignId('user_id')
@@ -32,6 +32,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('user_libraries');
+        Schema::dropIfExists('user_book_libraries');
     }
 }; 

@@ -1,6 +1,0 @@
-{
-    "name": "apiato/user-library",
-    "description": "User Book History Container",
-    "type": "apiato-container",
-    "require": {}
-}

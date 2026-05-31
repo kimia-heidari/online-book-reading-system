@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Containers\AppSection\UserLibrary\Models;
+namespace App\Containers\AppSection\Library\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Containers\AppSection\Book\Data\Factories\BookFactory;
 
-class UserLibrary extends Model
+class UserBookLibrary extends Model
 {
     protected $fillable = [
         'user_id',

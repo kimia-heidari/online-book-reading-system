@@ -1,0 +1,6 @@
+{
+    "name": "apiato/library",
+    "description": "Library Container",
+    "type": "apiato-container",
+    "require": {}
+}
