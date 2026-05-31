@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Containers\AppSection\Library\Tasks;
+namespace App\Containers\AppSection\UserBook\Tasks;
 
 use App\Containers\AppSection\UserBook\Models\UserBook;
 use App\Ship\Parents\Tasks\Task as ParentTask;
 
-class BookExistInLibraryTask extends ParentTask
+class CheckUserBookIsActiveTask extends ParentTask
 {
     public function run(int $userId, int $bookId): bool
     {

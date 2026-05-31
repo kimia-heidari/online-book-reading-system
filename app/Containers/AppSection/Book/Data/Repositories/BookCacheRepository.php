@@ -4,6 +4,7 @@ namespace App\Containers\AppSection\Book\Data\Repositories;
 
 use App\Containers\AppSection\Book\Models\Book;
 use App\Containers\AppSection\Book\Models\BookPage;
+use App\Containers\AppSection\Book\Support\BookCacheKeys;
 use Illuminate\Support\Facades\Cache;
 
 class BookCacheRepository

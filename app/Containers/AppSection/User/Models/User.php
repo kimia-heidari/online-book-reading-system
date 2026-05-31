@@ -5,9 +5,11 @@ namespace App\Containers\AppSection\User\Models;
 use App\Containers\AppSection\Authentication\Notifications\VerifyEmail;
 use App\Containers\AppSection\User\Data\Collections\UserCollection;
 use App\Containers\AppSection\User\Enums\Gender;
+use App\Containers\AppSection\UserBook\Models\UserBook;
 use App\Ship\Contracts\MustVerifyEmail;
 use App\Ship\Parents\Models\UserModel as ParentUserModel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends ParentUserModel implements MustVerifyEmail
 {
@@ -73,8 +75,8 @@ class User extends ParentUserModel implements MustVerifyEmail
         );
     }
 
-    public function bookHistories(): HasMany
+    public function userBooks(): HasMany
     {
-        return $this->hasMany(UserBookHistory::class);
+        return $this->hasMany(UserBook::class);
     }
 }

@@ -2,9 +2,11 @@
 
 namespace App\Containers\AppSection\Book\Models;
 
+use App\Containers\AppSection\Book\Data\Factories\BookFactory;
+use App\Containers\AppSection\UserBook\Models\UserBook;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Containers\AppSection\Book\Data\Factories\BookFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Book extends Model
 {
@@ -33,8 +35,8 @@ class Book extends Model
         return $this->hasMany(BookPage::class);
     }
 
-    public function userHistories(): HasMany
+    public function userBooks(): HasMany
     {
-        return $this->hasMany(UserBookHistory::class);
+        return $this->hasMany(UserBook::class);
     }
 }

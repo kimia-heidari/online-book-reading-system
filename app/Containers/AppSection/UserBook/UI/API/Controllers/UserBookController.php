@@ -2,12 +2,12 @@
 
 namespace App\Containers\AppSection\UserBook\UI\API\Controllers;
 
-use App\Ship\Parents\Controllers\ApiController;
-use App\Containers\AppSection\UserBook\UI\API\Requests\OpenBookRequest;
+use App\Containers\AppSection\Book\Models\Book;
 use App\Containers\AppSection\UserBook\Actions\OpenBookAction;
-use App\Containers\AppSection\UserBook\UI\API\Requests\TurnPageRequest;
 use App\Containers\AppSection\UserBook\Actions\TurnPageAction;
-use App\Containers\AppSection\Book\Model\Book;
+use App\Containers\AppSection\UserBook\UI\API\Requests\OpenBookRequest;
+use App\Containers\AppSection\UserBook\UI\API\Requests\TurnPageRequest;
+use App\Ship\Parents\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
 use Throwable;
 
@@ -35,13 +35,13 @@ class UserBookController extends ApiController
         TurnPageRequest $request,
         Book $book,
         TurnPageAction $action,
-    ): array {
+    ): JsonResponse {
         try {
             $nextPage = $action->run($book);
 
             return response()->json([
                 'status' => 'success',
-                'next_page' => nextPage,
+                'next_page' => $nextPage,
             ]);
         } catch (Throwable $e) {
             return response()->json([

@@ -2,9 +2,9 @@
 
 namespace App\Containers\AppSection\Library\Actions;
 
-use App\Containers\AppSection\Library\Tasks\BookExistInLibraryTask;
+use App\Containers\AppSection\Library\Exceptions\BookAlreadyInLibraryException;
 use App\Containers\AppSection\Library\Tasks\AddBookToLibraryTask;
-use App\Containers\AppSection\Library\Exception\BookAlreadyInLibraryException;
+use App\Containers\AppSection\Library\Tasks\BookExistInLibraryTask;
 use App\Ship\Parents\Actions\Action as ParentAction;
 
 class AddBookToLibraryAction extends ParentAction
@@ -17,6 +17,6 @@ class AddBookToLibraryAction extends ParentAction
             throw new BookAlreadyInLibraryException();
         }
 
-        app(AddBookToLibraryTask::class)->run($userId, $bookId);
+        return app(AddBookToLibraryTask::class)->run($userId, $bookId);
     }
 }

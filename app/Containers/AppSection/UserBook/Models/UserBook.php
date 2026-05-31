@@ -2,9 +2,10 @@
 
 namespace App\Containers\AppSection\UserBook\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Containers\AppSection\Book\Models\Book;
+use App\Containers\AppSection\User\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use App\Containers\AppSection\Book\Data\Factories\BookFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserBook extends Model
 {
@@ -14,7 +15,7 @@ class UserBook extends Model
         'last_page',
         'is_active',
         'font_size',
-        'last_read_at', 
+        'last_read_at',
     ];
 
     protected $casts = [

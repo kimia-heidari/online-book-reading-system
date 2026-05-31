@@ -2,26 +2,24 @@
 
 namespace App\Containers\AppSection\UserBook\Tasks;
 
-use App\Containers\AppSection\Library\Models\UserBook;
 use App\Containers\AppSection\Book\Models\Book;
+use App\Containers\AppSection\UserBook\Models\UserBook;
 use App\Ship\Parents\Tasks\Task as ParentTask;
 
 class TurnPageTask extends ParentTask
 {
     public function run(int $userId, Book $book): UserBook
     {
-        $userBook = UserBook::findOrFail(
-            [
-                'user_id' => $userId,
-                'book_id' => $book->id,
-                'is_active' => true
-            ],
-        );
+        $userBook = UserBook::query()
+            ->where('user_id', $userId)
+            ->where('book_id', $book->id)
+            ->where('is_active', true)
+            ->firstOrFail();
 
-        $newlastPage = min($userBook->last_page, $book->total_pages);
+        $newLastPage = min($userBook->last_page + 1, $book->total_pages);
 
         $userBook->update([
-            'last_page' => $newlastPage,
+            'last_page' => $newLastPage,
             'last_read_at' => now(),
         ]);
 

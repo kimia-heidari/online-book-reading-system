@@ -7,9 +7,6 @@ use App\Ship\Parents\Tasks\Task as ParentTask;
 
 class AddBookToLibraryTask extends ParentTask
 {
-    /**
-     * @throws CreateResourceFailedException
-     */
     public function run(int $userId, int $bookId): bool
     {
         $library = UserBookLibrary::firstOrCreate([
@@ -17,6 +14,6 @@ class AddBookToLibraryTask extends ParentTask
             'book_id' => $bookId,
         ]);
 
-        return $libraryBook->wasRecentlyCreated;
+        return $library->wasRecentlyCreated;
     }
 }

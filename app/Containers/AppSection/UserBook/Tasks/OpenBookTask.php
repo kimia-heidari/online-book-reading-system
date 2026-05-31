@@ -2,16 +2,14 @@
 
 namespace App\Containers\AppSection\UserBook\Tasks;
 
-use App\Containers\AppSection\Library\Models\UserBook;
+use App\Containers\AppSection\UserBook\Models\UserBook;
 use App\Ship\Parents\Tasks\Task as ParentTask;
 use Illuminate\Support\Facades\DB;
 
 class OpenBookTask extends ParentTask
 {
-    public function run(
-        int $userId,
-        int $bookId
-    ): UserBook {
+    public function run(int $userId, int $bookId): UserBook
+    {
         return DB::transaction(function () use ($userId, $bookId) {
 
             // deactivate all user books
