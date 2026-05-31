@@ -1,176 +1,372 @@
-<p align="center">
-   <a href="https://github.com/apiato/apiato/actions/workflows/tests.yaml">
-      <img src="https://img.shields.io/github/actions/workflow/status/apiato/apiato/tests.yaml?label=tests" alt="tests status">
-   </a>
-   <a href="https://codecov.io/gh/apiato/apiato">
-      <img src="https://img.shields.io/codecov/c/github/apiato/apiato?token=siiyEg5AC9" alt="code coverage"/>
-   </a>
-   <a href="https://packagist.org/packages/apiato/apiato">
-      <img src="https://img.shields.io/packagist/v/apiato/apiato" alt="latest stable version">
-   </a>
-   <br>
-   <a href="https://packagist.org/packages/apiato/apiato">
-      <img src="https://img.shields.io/packagist/dt/apiato/apiato" alt="total downloads">
-   </a>
-   <a href="https://github.com/apiato/apiato">
-      <img src="https://img.shields.io/github/license/apiato/apiato" alt="license">
-   </a>
-   <a href="https://discord.gg/ryPcV4KM5k">
-      <img src="https://img.shields.io/discord/800815227839053834?logo=discord&label=chat" alt="chat">
-   </a>
-</p>
+# Online Book Reading System
 
-<p align="center">
-   <img src="https://github.com/apiato/documentation/blob/master/images/apiato.jpg" alt="Apiato Logo"/>
-</p>
-<h1 align="center">Apiato</h1>
-<h3 align="center">Build scalable APIs faster | Powered by PHP and Laravel</h3>
+A REST API for managing a personal digital library and reading books online. Built with [Apiato](https://apiato.io) (Laravel + Porto SAP), it supports user authentication, adding books to a library, opening a book for reading, and turning pages while tracking progress.
 
 ---
 
 ## Overview
 
-**Apiato** is a PHP framework built on top of Laravel, specifically designed for creating scalable, testable, API-centric applications. Utilizing the [Porto SAP](https://mahmoudz.github.io/Porto/) architectural pattern, Apiato offers a robust foundation for building complex APIs with flexibility and speed.
+Users can register, authenticate via OAuth2, add books to their library, open a book to start or resume reading, and turn pages. The system tracks each user's reading position (`last_page`), which book is currently active, and when they last read.
 
-### Key Features
+Book metadata and page content are cached for performance. Cache entries are invalidated automatically when books or pages are updated.
 
-- **Code Generators** for faster development and streamlined API creation
-- **Documentation Generators** to easily build comprehensive API documentation
-- **API Versioning** to maintain backward compatibility across versions
-- **OAuth2.0 Authentication** for secure, standardized user authentication
-- **Role-Based Access Control** to manage user permissions effectively
-- **Pagination Support** for efficient data retrieval and navigation
-- **Data Caching** to optimize performance and reduce server load
-- **ETag Support** for optimized caching and reduced bandwidth usage
-- **Performance Profiler** to identify and improve application bottlenecks
-- **Localization** for multilingual support in global applications
-- **Social Authentication** with integrations for popular platforms
-- **Test Helpers** for building reliable, maintainable tests
-- **Multiple Response Formats** to adapt to client needs easily
-- **Query Parameters Support** for flexible data querying and filtering
-- **Hash ID Support** to secure sensitive IDs in API responses
-- **Comprehensive Documentation** for seamless onboarding and usage
+---
 
-For a comprehensive list of features, visit the [Apiato Documentation](https://apiato.io).
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Framework | [Apiato](https://apiato.io) 8.x on [Laravel](https://laravel.com) 10 |
+| Language | PHP 8.1+ |
+| Database | MySQL |
+| Authentication | Laravel Passport (OAuth2) |
+| Architecture | [Porto SAP](https://mahmoudz.github.io/Porto/) (container-based) |
+
+---
+
+## Features
+
+- **User authentication** — Register, login, logout, password reset (Apiato Authentication container)
+- **Personal library** — Add books to a user's library
+- **Reading session** — Open a book and resume from the last saved page
+- **Page turning** — Advance through pages; returns the next page number or `null` at the end
+- **Reading progress** — Tracks `last_page`, active book, font size, and `last_read_at`
+- **Book caching** — Books and pages are cached with automatic invalidation via observers
+- **Sample data** — Seeder creates books with paginated content for development and testing
+
+---
+
+## Project Structure
+
+Custom containers for the reading system live under `app/Containers/AppSection/`:
+
+| Container | Purpose |
+|-----------|---------|
+| **Book** | Book and page models, migrations, caching, seeders |
+| **Library** | Add books to a user's library (`user_book_libraries`) |
+| **UserBook** | Open books and turn pages; tracks reading state (`user_books`) |
+| **Category** | Admin web UI for book categories |
+| **Authentication** | OAuth2 login, registration, password management |
+| **Authorization** | Roles and permissions |
+| **User** | User profile and account management |
+
+---
+
+## Database Schema
+
+| Table | Description |
+|-------|-------------|
+| `books` | Title, author, slug, description, `total_pages`, `is_active` |
+| `book_pages` | Page content per book (`book_id`, `page_number`, `content`) |
+| `user_book_libraries` | Books saved in a user's library |
+| `user_books` | Reading progress per user/book (`last_page`, `is_active`, `font_size`, `last_read_at`) |
 
 ---
 
 ## Getting Started
 
-To get started with Apiato, please refer to the [Getting Started Guide](https://apiato.io/docs/getting-started/introduction) in the documentation.
+### Prerequisites
+
+- PHP 8.1+ with extensions: `curl`, `mbstring`, `openssl`, `pdo`, `tokenizer`
+- Composer
+- MySQL
+- [XAMPP](https://www.apachefriends.org/) (or any PHP/MySQL environment)
+
+### Installation
+
+1. **Clone the repository** and install dependencies:
+
+```bash
+composer install
+```
+
+2. **Configure the environment:**
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+Update `.env` with your database credentials and URLs:
+
+```env
+APP_URL=http://localhost/online%20book%20reading%20system/public
+API_URL=http://localhost/online%20book%20reading%20system/public
+
+DB_DATABASE=online_book_reading
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+3. **Run migrations and seed data:**
+
+```bash
+php artisan migrate
+php artisan db:seed
+php artisan passport:install
+```
+
+Copy the generated **Personal access client** ID and secret into `.env`:
+
+```env
+CLIENT_WEB_ID=your-client-id
+CLIENT_WEB_SECRET=your-client-secret
+```
+
+4. **Seed sample books** (optional, for development):
+
+```bash
+php artisan apiato:seed-test
+```
+
+This creates 10 books, each with pages and sample content.
+
+5. **Serve the application** (if not using XAMPP's Apache):
+
+```bash
+php artisan serve
+```
 
 ---
 
-## Community & Support
+## API Reference
 
-Join our [Discord Community](https://discord.gg/ryPcV4KM5k) for free support, discussions, and connecting with other developers using Apiato.
+All endpoints are versioned under `/v1`. Send requests with:
 
-If you find a bug or have a feature request, feel free to [open an issue](https://github.com/apiato/apiato/issues).
+```
+Accept: application/json
+Content-Type: application/json
+```
 
----
+Protected endpoints require:
 
-## Contributing
+```
+Authorization: Bearer {access_token}
+```
 
-Thank you for considering contributing to Apiato! Contributions are welcome, whether it's documentation, bug reports, or feature suggestions. Check out our [Contribution Guide](https://apiato.io/docs/contribution-guide) for guidelines on how to get started.
-
-Please adhere to the [Code of Conduct](https://apiato.io/docs/contribution-guide#code-of-conduct) to maintain a welcoming environment for all contributors.
-
----
-
-## Security
-
-If you discover a security vulnerability, please report it to [Mohammad Alavi](mailto:mohammad.alavi1990@gmail.com). Your report will be addressed promptly.
+Base URL: `{API_URL}/v1`
 
 ---
 
-## Project Maintainers
+### Authentication
 
-<table>
-  <tbody>
-     <tr>
-        <td align="center" valign="top">
-            <img width="125" height="125" src="https://github.com/mahmoudz.png?s=150">
-            <br>
-            <strong>Mahmoud Zalt</strong>
-            <br>
-            <a href="https://github.com/Mahmoudz">@mahmoudz</a>
-        </td>
-         <td align="center" valign="top">
-            <img width="125" height="125" src="https://github.com/mohammad-alavi.png?s=150">
-            <br>
-            <strong>Mohammad Alavi</strong>
-            <br>
-            <a href="https://github.com/mohammad-alavi">@Mohammad-Alavi</a>
-        </td>
-          <td align="center" valign="top">
-            <img width="125" height="125" src="https://github.com/mderis.png?s=150">
-            <br>
-            <strong>Moslem Deris</strong>
-            <br>
-            <a href="https://github.com/mderis">@mderis</a>
-          </td>
-     </tr>
-  </tbody>
-</table>
+#### Register
 
+```http
+POST /v1/register
+```
 
-## Contributors
+**Body:**
 
-[![Apiato Contributors](https://opencollective.com/apiato/contributors.svg?width=890&button=false&isActive=true)](https://github.com/apiato/apiato/graphs/contributors)
+```json
+{
+  "email": "reader@example.com",
+  "password": "Password1!",
+  "name": "Jane Reader"
+}
+```
 
+#### Login (Web Client Proxy)
 
-## Sponsors
+```http
+POST /v1/clients/web/login
+```
 
-<!-- Listing Contributors Refference: https://docs.opencollective.com/help/collectives/collective-settings/data-export#contributor-image -->
+**Body:**
 
-### Diamond Sponsors
+```json
+{
+  "email": "reader@example.com",
+  "password": "Password1!"
+}
+```
 
-<p align="left">
-  <a href="https://smart.sista.ai/?utm_source=docs_apiato&utm_medium=sponsor&utm_campaign=landing_page_content" target="_blank">
-    <img src="https://raw.githubusercontent.com/laradock/laradock/master/.github/home-page-images/custom-sponsors/sista-ai-icon.png" height="165px" alt="Sista AI - Plug-and-Play AI Assistant. (www.sista.ai)" style="margin-right: 4em;">
-  </a>
-  <a href="http://laradock.io/" target="_blank">
-    <img src="https://raw.githubusercontent.com/laradock/laradock/master/DOCUMENTATION/static/img/laradock/laradock-icon.png" height="165px" alt="Laradock: Full PHP development environment on Docker.">
-  </a>
-</p>
+**Response:**
 
+```json
+{
+  "token_type": "Bearer",
+  "expires_in": 86400,
+  "access_token": "eyJ0eXAiOiJKV1QiLCJhbG...",
+  "refresh_token": "def50200..."
+}
+```
 
+#### Logout
 
-### Gold Sponsors
+```http
+POST /v1/logout
+Authorization: Bearer {access_token}
+```
 
-![Gold Sponsors](https://opencollective.com/apiato/tiers/gold-sponsors.svg?avatarHeight=120&width=800&format=svg&button=false)
+#### Refresh Token
 
-### Silver Sponsors
+```http
+POST /v1/clients/web/refresh
+```
 
-![Silver Sponsors](https://opencollective.com/apiato/tiers/silver-sponsors.svg?avatarHeight=90&width=800&format=svg&button=false)
+**Body:**
 
-### Bronze Sponsors
+```json
+{
+  "refresh_token": "def50200..."
+}
+```
 
-![Bronze Sponsors](https://opencollective.com/apiato/tiers/bronze-sponsors.svg?avatarHeight=65&width=800&format=svg&button=false)
+---
 
+### Library
 
+#### Add Book to Library
 
-## Backers
+Adds a book to the authenticated user's library.
 
-[![Open Collective backers](https://opencollective.com/apiato/tiers/awesome-backers.svg?width=800&avatarHeight=65&button=false&isActive=true)](https://opencollective.com/apiato#contributors)
-[![Open Collective backers](https://opencollective.com/apiato/tiers/donate.svg?width=800&avatarHeight=65&button=false&isActive=true)](https://opencollective.com/apiato#contributors)
+```http
+POST /v1/library/books
+Authorization: Bearer {access_token}
+```
 
+**Body:**
 
-### Supports Us
+```json
+{
+  "book_id": 1
+}
+```
 
-You can support us using any of the methods below:
+**Success (200):**
 
-<b>1:</b> [Open Collective](https://opencollective.com/apiato) (For Sponsorships checkout Open Collective, or emails us at support@apiato.io)
+```json
+{
+  "status": "success",
+  "message": "Book added successfully."
+}
+```
 
-<b>2:</b> [Github Sponsors](https://github.com/sponsors/Mahmoudz)
+**Already in library (409):**
 
+```json
+{
+  "status": "failed",
+  "message": "Book is already in your library."
+}
+```
+
+---
+
+### Reading
+
+#### Open Book
+
+Opens a book for reading. Deactivates any other active book for the user, activates the selected book, and returns the last saved page.
+
+```http
+POST /v1/user/books/open
+Authorization: Bearer {access_token}
+```
+
+**Body:**
+
+```json
+{
+  "book_id": 1
+}
+```
+
+**Success (200):**
+
+```json
+{
+  "status": "success",
+  "last_page": 3
+}
+```
+
+#### Turn Page
+
+Advances to the next page for the currently active book. The book must be open (active) for the user.
+
+```http
+PATCH /v1/user/books/{book_id}/turn-page
+Authorization: Bearer {access_token}
+```
+
+**Success (200):**
+
+```json
+{
+  "status": "success",
+  "next_page": 4
+}
+```
+
+When the user reaches the last page, `next_page` is `null`.
+
+**Book not active (500):**
+
+```json
+{
+  "status": "failed"
+}
+```
+
+---
+
+### User Profile
+
+```http
+GET /v1/profile
+Authorization: Bearer {access_token}
+```
+
+---
+
+## Typical Reading Flow
+
+```
+1. POST /v1/register              → Create account
+2. POST /v1/clients/web/login     → Get access token
+3. POST /v1/library/books         → Add book to library
+4. POST /v1/user/books/open       → Open book, get last_page
+5. PATCH /v1/user/books/{id}/turn-page  → Turn pages until next_page is null
+```
+
+Only one book can be **active** per user at a time. Opening a new book deactivates the previous one.
+
+---
+
+## Caching
+
+The **Book** container caches book metadata and page content for one day. Observers on `Book` and `BookPage` clear the relevant cache keys when records are created, updated, or deleted.
+
+---
+
+## Running Tests
+
+```bash
+php artisan test
+```
+
+Or with PHPUnit directly:
+
+```bash
+vendor/bin/phpunit
+```
+
+---
+
+## Documentation
+
+Apiato can generate API documentation from route annotations:
+
+```bash
+php artisan apiato:generate:docs
+```
+
+For full Apiato framework documentation, see [apiato.io](https://apiato.io/docs).
+
+---
 
 ## License
 
-Apiato is open-sourced software licensed under the [MIT license](https://github.com/apiato/apiato/blob/master/LICENSE).
-
----
-
-<p align="center">
-   <strong>Made with ❤️ by the Apiato community</strong>
-</p>
+This project is built on [Apiato](https://github.com/apiato/apiato), which is open-source software licensed under the [MIT license](https://github.com/apiato/apiato/blob/master/LICENSE).
