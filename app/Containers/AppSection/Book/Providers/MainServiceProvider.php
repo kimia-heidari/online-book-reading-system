@@ -2,6 +2,10 @@
 
 namespace App\Containers\AppSection\Book\Providers;
 
+use App\Containers\AppSection\Book\Models\BookPage;
+use App\Containers\AppSection\Book\Observers\BookPageObserver;
+use App\Containers\AppSection\Book\Models\Book;
+use App\Containers\AppSection\Book\Observers\BookObserver;
 use App\Ship\Parents\Providers\MainServiceProvider as ParentMainServiceProvider;
 
 /**
@@ -17,6 +21,13 @@ class MainServiceProvider extends ParentMainServiceProvider
     public array $aliases = [
         // 'Foo' => Bar::class,
     ];
+
+    public function boot(): void
+    {
+        parent::boot();
+        BookPage::observe(BookPageObserver::class);
+        Book::observe(BookObserver::class);
+    }
 
     public function register(): void
     {

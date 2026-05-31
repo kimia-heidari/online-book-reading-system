@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Containers\AppSection\UserBookHistory\Providers;
+namespace App\Containers\AppSection\UserBook\Providers;
 
 use App\Ship\Parents\Providers\MainServiceProvider as ParentMainServiceProvider;
 
