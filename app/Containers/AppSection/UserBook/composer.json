@@ -1,0 +1,6 @@
+{
+    "name": "apiato/user-book",
+    "description": "User Book Container",
+    "type": "apiato-container",
+    "require": {}
+}
