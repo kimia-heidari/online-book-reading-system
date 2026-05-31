@@ -29,7 +29,7 @@ class OpenBookTask extends ParentTask
                     'book_id' => $bookId,
                 ],
                 [
-                    'last_page' => 1,
+                    'last_page' => 0,
                     'is_active' => false,
                 ]
             );
